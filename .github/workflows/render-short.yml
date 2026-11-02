@@ -60,9 +60,9 @@ jobs:
             npx remotion still src/index.ts "$COMP" out/cloud/still_100.jpg --frame=100 --scale="$SCALE" --gl=swangle
             npx remotion still src/index.ts "$COMP" out/cloud/still_900.jpg --frame=900 --scale="$SCALE" --gl=swangle
           elif [ "$MODE" = "clip_5s" ]; then
-            npx remotion render src/index.ts "$COMP" out/cloud/video_5s.mp4 --frames=990-1139 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4
+            npx remotion render src/index.ts "$COMP" out/cloud/video_5s.mp4 --frames=990-1139 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4 --props='{"post":{"dpr":0.5}}'
           else
-            npx remotion render src/index.ts "$COMP" out/cloud/video_full.mp4 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4
+            npx remotion render src/index.ts "$COMP" out/cloud/video_full.mp4 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4 --props='{"post":{"dpr":0.6667}}'
           fi
 
       - name: Upload Rendered Output
