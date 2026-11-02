@@ -1,0 +1,66 @@
+name: Fast Render Missing Chunk 04
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  chunk04-macos:
+    name: Chunk 04 (Apple GPU 60s)
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - run: npm install --no-audit --no-fund
+      - name: Render Chunk 04 (1059-1411)
+        run: |
+          mkdir -p out/chunks
+          npx remotion render src/index.ts CheeseShort out/chunks/chunk_04.mp4 \
+            --frames=1059-1411 --codec=h264 --crf=18 --scale=0.6667 \
+            --gl=angle --concurrency=3 --timeout=120000 \
+            --muted --props='{"post":{"dpr":0.6667}}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fast-chunk-04-macos
+          path: out/chunks/chunk_04.mp4
+
+  chunk04-linux:
+    name: Chunk 04 Mini-${{ matrix.part.id }} (Linux)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        part:
+          - { id: "a", frames: "1059-1146" }
+          - { id: "b", frames: "1147-1234" }
+          - { id: "c", frames: "1235-1322" }
+          - { id: "d", frames: "1323-1411" }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+      - name: Install Linux Chrome & GL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libegl1 libgl1-mesa-dri
+      - run: npm install --no-audit --no-fund
+      - name: Render Mini-Chunk ${{ matrix.part.id }}
+        run: |
+          mkdir -p out/chunks
+          npx remotion render src/index.ts CheeseShort "out/chunks/chunk_04_${{ matrix.part.id }}.mp4" \
+            --frames="${{ matrix.part.frames }}" --codec=h264 --crf=18 --scale=0.6667 \
+            --gl=swangle --concurrency=2 --timeout=180000 \
+            --muted --props='{"post":{"dpr":0.5}}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fast-chunk-04-linux-${{ matrix.part.id }}
+          path: out/chunks/chunk_04_${{ matrix.part.id }}.mp4
