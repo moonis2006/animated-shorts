@@ -7,23 +7,19 @@ on:
   workflow_dispatch:
     inputs:
       composition:
-        description: "Composition ID (e.g. BridgeShort)"
+        description: "Composition ID (CheeseShort or BridgeShort)"
         required: true
-        default: "BridgeShort"
-      mode:
-        description: "Render mode: 'clip_5s' (fast 5s test), 'stills' (preview images), or 'full' (entire video)"
-        required: true
-        default: "clip_5s"
+        default: "CheeseShort"
       scale:
         description: "Resolution scale (0.5 = 540p fast, 0.6667 = 720p HD, 1.0 = 1080p Full HD)"
         required: true
         default: "0.6667"
 
 jobs:
-  render:
-    name: Render on GitHub Cloud Server
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
+  preview-stills:
+    name: Render Preview Stills (Apple GPU)
+    runs-on: macos-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,40 +30,100 @@ jobs:
           node-version: "22"
           cache: "npm"
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - name: Install Node packages
+        run: npm install --no-audit --no-fund
 
-      - name: Install Linux Chrome & FFmpeg dependencies
+      - name: Render 3 Preview Stills
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libegl1 libgl1-mesa-dri
+          COMP="${{ github.event.inputs.composition || 'CheeseShort' }}"
+          mkdir -p out/stills
+          npx remotion still src/index.ts "$COMP" out/stills/still_hook_f60.jpg --frame=60 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_broadside_f920.jpg --frame=920 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_shatter_f990.jpg --frame=990 --scale=0.6667 --gl=angle --timeout=120000
+
+      - name: Upload Preview Stills
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-stills
+          path: out/stills/*.jpg
+          retention-days: 14
+
+  render-chunks:
+    name: Render Video Chunk ${{ matrix.chunk.id }}/4 (Apple GPU)
+    runs-on: macos-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk:
+          - { id: 1, frames: "0-489" }
+          - { id: 2, frames: "490-979" }
+          - { id: 3, frames: "980-1469" }
+          - { id: 4, frames: "1470-1959" }
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
 
       - name: Install Node packages
         run: npm install --no-audit --no-fund
 
-      - name: Ensure Remotion Headless Browser
-        run: npx remotion browser ensure
-
-      - name: Run Render on Cloud Server
+      - name: Render Chunk ${{ matrix.chunk.id }}
         run: |
-          COMP="${{ github.event.inputs.composition || 'BridgeShort' }}"
-          MODE="${{ github.event.inputs.mode || 'clip_5s' }}"
+          COMP="${{ github.event.inputs.composition || 'CheeseShort' }}"
           SCALE="${{ github.event.inputs.scale || '0.6667' }}"
-          mkdir -p out/cloud
-          if [ "$MODE" = "stills" ]; then
-            npx remotion still src/index.ts "$COMP" out/cloud/still_100.jpg --frame=100 --scale="$SCALE" --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.5}}'
-            npx remotion still src/index.ts "$COMP" out/cloud/still_900.jpg --frame=900 --scale="$SCALE" --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.5}}'
-          elif [ "$MODE" = "clip_5s" ]; then
-            npx remotion render src/index.ts "$COMP" out/cloud/video_5s.mp4 --frames=990-1139 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=2 --timeout=180000 --props='{"post":{"dpr":0.5}}'
-          else
-            npx remotion render src/index.ts "$COMP" out/cloud/video_full.mp4 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=2 --timeout=180000 --props='{"post":{"dpr":0.5}}'
-          fi
+          mkdir -p out/chunks
+          npx remotion render src/index.ts "$COMP" "out/chunks/chunk_${{ matrix.chunk.id }}.mp4" \
+            --frames="${{ matrix.chunk.frames }}" \
+            --codec=h264 --crf=18 --scale="$SCALE" \
+            --gl=angle --concurrency=3 --timeout=120000 \
+            --muted --props='{"post":{"dpr":0.6667}}'
 
-      - name: Upload Rendered Output
+      - name: Upload Chunk ${{ matrix.chunk.id }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: video-chunk-${{ matrix.chunk.id }}
+          path: out/chunks/chunk_${{ matrix.chunk.id }}.mp4
+          retention-days: 7
+
+  merge-video:
+    name: Merge Full Video + Audio Mix
+    needs: render-chunks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download All 4 Video Chunks
+        uses: actions/download-artifact@v4
+        with:
+          pattern: video-chunk-*
+          path: out/chunks
+          merge-multiple: true
+
+      - name: Concatenate Chunks & Mux Narrator/SFX Audio
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          mkdir -p out/cloud
+          cat << 'EOF' > out/chunks/list.txt
+          file 'chunk_1.mp4'
+          file 'chunk_2.mp4'
+          file 'chunk_3.mp4'
+          file 'chunk_4.mp4'
+          EOF
+          ffmpeg -y -f concat -safe 0 -i out/chunks/list.txt -i public/cheese/mix.mp3 \
+            -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -shortest \
+            out/cloud/tactical_fiction_cheese_short.mp4
+
+      - name: Upload Final Full Video MP4
         uses: actions/upload-artifact@v4
         with:
           name: rendered-short-output
-          path: out/cloud/*
+          path: out/cloud/tactical_fiction_cheese_short.mp4
           retention-days: 14
