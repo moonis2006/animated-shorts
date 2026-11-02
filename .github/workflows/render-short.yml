@@ -1,0 +1,73 @@
+name: Cloud Render Animated Short
+
+on:
+  push:
+    branches:
+      - render
+  workflow_dispatch:
+    inputs:
+      composition:
+        description: "Composition ID (e.g. BridgeShort)"
+        required: true
+        default: "BridgeShort"
+      mode:
+        description: "Render mode: 'clip_5s' (fast 5s test), 'stills' (preview images), or 'full' (entire video)"
+        required: true
+        default: "clip_5s"
+      scale:
+        description: "Resolution scale (0.5 = 540p fast, 0.6667 = 720p HD, 1.0 = 1080p Full HD)"
+        required: true
+        default: "0.6667"
+
+jobs:
+  render:
+    name: Render on GitHub Cloud Server
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Linux Chrome & FFmpeg dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libegl1 libgl1-mesa-dri
+
+      - name: Install Node packages
+        run: npm install --no-audit --no-fund
+
+      - name: Ensure Remotion Headless Browser
+        run: npx remotion browser ensure
+
+      - name: Run Render on Cloud Server
+        run: |
+          COMP="${{ github.event.inputs.composition || 'BridgeShort' }}"
+          MODE="${{ github.event.inputs.mode || 'clip_5s' }}"
+          SCALE="${{ github.event.inputs.scale || '0.6667' }}"
+          mkdir -p out/cloud
+          if [ "$MODE" = "stills" ]; then
+            npx remotion still src/index.ts "$COMP" out/cloud/still_100.jpg --frame=100 --scale="$SCALE" --gl=swangle
+            npx remotion still src/index.ts "$COMP" out/cloud/still_900.jpg --frame=900 --scale="$SCALE" --gl=swangle
+          elif [ "$MODE" = "clip_5s" ]; then
+            npx remotion render src/index.ts "$COMP" out/cloud/video_5s.mp4 --frames=990-1139 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4
+          else
+            npx remotion render src/index.ts "$COMP" out/cloud/video_full.mp4 --codec=h264 --crf=18 --scale="$SCALE" --gl=swangle --concurrency=4
+          fi
+
+      - name: Upload Rendered Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-short-output
+          path: out/cloud/*
+          retention-days: 14

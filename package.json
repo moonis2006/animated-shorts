@@ -1,0 +1,31 @@
+{
+  "name": "animated-shorts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "remotion studio src/index.ts",
+    "preview:still": "node scripts/bridge-stills.mjs out/bridge/preview_ 100 0.5",
+    "render:local:720p": "remotion render src/index.ts BridgeShort out/bridge/video_720p.mp4 --codec h264 --crf 18 --scale 0.6667",
+    "render:local:2k": "remotion render src/index.ts BridgeShort out/bridge/video_2k.mp4 --codec h264 --crf 16 --scale 1.3333",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-three/fiber": "^8.17.10",
+    "@react-three/postprocessing": "^2.16.3",
+    "@remotion/bundler": "4.0.286",
+    "@remotion/cli": "4.0.286",
+    "@remotion/renderer": "4.0.286",
+    "@remotion/three": "4.0.286",
+    "postprocessing": "^6.36.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.286",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@types/three": "^0.169.0",
+    "typescript": "^5.6.3"
+  }
+}

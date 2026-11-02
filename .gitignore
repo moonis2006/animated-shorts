@@ -1,0 +1,9 @@
+node_modules/
+out/
+backup/
+.remotion/
+remotion-tmp/
+.agents/skills/cartoon-3d-short/references/frames/
+.agents/skills/cartoon-3d-short/references/sheets/
+*.log
+.DS_Store
