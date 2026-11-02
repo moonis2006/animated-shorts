@@ -33,13 +33,14 @@ jobs:
       - name: Install Node packages
         run: npm install --no-audit --no-fund
 
-      - name: Render 3 Preview Stills
+      - name: Render 4 Preview Stills
         run: |
           COMP="${{ github.event.inputs.composition || 'CheeseShort' }}"
           mkdir -p out/stills
-          npx remotion still src/index.ts "$COMP" out/stills/still_hook_f60.jpg --frame=60 --scale=0.6667 --gl=angle --timeout=120000
-          npx remotion still src/index.ts "$COMP" out/stills/still_broadside_f920.jpg --frame=920 --scale=0.6667 --gl=angle --timeout=120000
-          npx remotion still src/index.ts "$COMP" out/stills/still_shatter_f990.jpg --frame=990 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_1_duel_f180.jpg --frame=180 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_2_galley_f660.jpg --frame=660 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_3_broadside_f960.jpg --frame=960 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_4_fridge_f1500.jpg --frame=1500 --scale=0.6667 --gl=angle --timeout=120000
 
       - name: Upload Preview Stills
         uses: actions/upload-artifact@v4
