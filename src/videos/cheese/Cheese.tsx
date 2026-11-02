@@ -62,8 +62,9 @@ const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
     grain: new GrainEffect({ amount: 0.025, cellPx: 1.5 }), // film grain, OFF by default (inputProps post.grain): the reference measures no grain and it quadruples the file size
   }), [camera, scene]);
   useEffect(() => () => { fx.ink.dispose?.(); }, [fx]);
+  const dpr = dprOverride();
   const post = useMemo(() => (
-    <EffectComposer multisampling={4}>
+    <EffectComposer multisampling={dpr && dpr < 1 ? 0 : 4}>
       {[
         on.ink ? <primitive key="ink" object={fx.ink} /> : null,
         on.lens && on.pre ? <primitive key="pre" object={fx.lens.pre} /> : null,
@@ -74,7 +75,7 @@ const Inner: React.FC<{ id: number; kit: Kit }> = ({ id, kit }) => {
         on.grain ? <primitive key="grain" object={fx.grain} /> : null,
       ].filter((x): x is React.ReactElement => x !== null)}
     </EffectComposer>
-  ), [fx, on]);
+  ), [fx, on, dpr]);
   const cam = camera as THREE.PerspectiveCamera;
   target.copy(world.update(id, f, cam, scene));
   noInkFallback(world.root);

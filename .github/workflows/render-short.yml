@@ -17,8 +17,8 @@ on:
 
 jobs:
   preview-stills:
-    name: Render Preview Stills (Apple GPU)
-    runs-on: macos-latest
+    name: Render 4 Preview Stills
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout code
@@ -30,6 +30,11 @@ jobs:
           node-version: "22"
           cache: "npm"
 
+      - name: Install Linux Chrome & GL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libegl1 libgl1-mesa-dri
+
       - name: Install Node packages
         run: npm install --no-audit --no-fund
 
@@ -37,10 +42,10 @@ jobs:
         run: |
           COMP="${{ github.event.inputs.composition || 'CheeseShort' }}"
           mkdir -p out/stills
-          npx remotion still src/index.ts "$COMP" out/stills/still_1_duel_f180.jpg --frame=180 --scale=0.6667 --gl=angle --timeout=120000
-          npx remotion still src/index.ts "$COMP" out/stills/still_2_galley_f660.jpg --frame=660 --scale=0.6667 --gl=angle --timeout=120000
-          npx remotion still src/index.ts "$COMP" out/stills/still_3_broadside_f960.jpg --frame=960 --scale=0.6667 --gl=angle --timeout=120000
-          npx remotion still src/index.ts "$COMP" out/stills/still_4_fridge_f1500.jpg --frame=1500 --scale=0.6667 --gl=angle --timeout=120000
+          npx remotion still src/index.ts "$COMP" out/stills/still_1_duel_f180.jpg --frame=180 --scale=0.6667 --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.6667}}'
+          npx remotion still src/index.ts "$COMP" out/stills/still_2_galley_f660.jpg --frame=660 --scale=0.6667 --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.6667}}'
+          npx remotion still src/index.ts "$COMP" out/stills/still_3_broadside_f960.jpg --frame=960 --scale=0.6667 --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.6667}}'
+          npx remotion still src/index.ts "$COMP" out/stills/still_4_fridge_f1500.jpg --frame=1500 --scale=0.6667 --gl=swangle --timeout=180000 --props='{"post":{"dpr":0.6667}}'
 
       - name: Upload Preview Stills
         uses: actions/upload-artifact@v4
@@ -50,17 +55,23 @@ jobs:
           retention-days: 14
 
   render-chunks:
-    name: Render Video Chunk ${{ matrix.chunk.id }}/4 (Apple GPU)
-    runs-on: macos-latest
-    timeout-minutes: 45
+    name: Render Video Chunk ${{ matrix.chunk.id }}/10
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
         chunk:
-          - { id: 1, frames: "0-489" }
-          - { id: 2, frames: "490-979" }
-          - { id: 3, frames: "980-1469" }
-          - { id: 4, frames: "1470-1959" }
+          - { id: "01", frames: "0-195" }
+          - { id: "02", frames: "196-391" }
+          - { id: "03", frames: "392-587" }
+          - { id: "04", frames: "588-783" }
+          - { id: "05", frames: "784-979" }
+          - { id: "06", frames: "980-1175" }
+          - { id: "07", frames: "1176-1371" }
+          - { id: "08", frames: "1372-1567" }
+          - { id: "09", frames: "1568-1763" }
+          - { id: "10", frames: "1764-1959" }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -70,6 +81,11 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
+
+      - name: Install Linux Chrome & GL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2t64 libegl1 libgl1-mesa-dri
 
       - name: Install Node packages
         run: npm install --no-audit --no-fund
@@ -82,8 +98,8 @@ jobs:
           npx remotion render src/index.ts "$COMP" "out/chunks/chunk_${{ matrix.chunk.id }}.mp4" \
             --frames="${{ matrix.chunk.frames }}" \
             --codec=h264 --crf=18 --scale="$SCALE" \
-            --gl=angle --concurrency=3 --timeout=120000 \
-            --muted --props='{"post":{"dpr":0.6667}}'
+            --gl=swangle --concurrency=2 --timeout=180000 \
+            --muted --props='{"post":{"dpr":0.5}}'
 
       - name: Upload Chunk ${{ matrix.chunk.id }}
         uses: actions/upload-artifact@v4
@@ -101,7 +117,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download All 4 Video Chunks
+      - name: Download All 10 Video Chunks
         uses: actions/download-artifact@v4
         with:
           pattern: video-chunk-*
@@ -112,12 +128,9 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
           mkdir -p out/cloud
-          cat << 'EOF' > out/chunks/list.txt
-          file 'chunk_1.mp4'
-          file 'chunk_2.mp4'
-          file 'chunk_3.mp4'
-          file 'chunk_4.mp4'
-          EOF
+          for i in 01 02 03 04 05 06 07 08 09 10; do
+            echo "file 'chunk_${i}.mp4'" >> out/chunks/list.txt
+          done
           ffmpeg -y -f concat -safe 0 -i out/chunks/list.txt -i public/cheese/mix.mp3 \
             -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -shortest \
             out/cloud/tactical_fiction_cheese_short.mp4
