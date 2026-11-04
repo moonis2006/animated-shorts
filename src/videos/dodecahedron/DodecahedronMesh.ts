@@ -8,7 +8,7 @@ import * as THREE from 'three';
  * - Concentric engraved decorative rings around each circular hole.
  * - 20 spherical knobs at every vertex/corner.
  * - Hollow bronze interior.
- * - Aged cast bronze patina material with subtle verdigris oxidation.
+ * - Aged cast bronze patina material with bright, rich antique golden highlights.
  */
 
 const PHI = (1 + Math.sqrt(5)) / 2; // Golden ratio ~1.618034
@@ -45,34 +45,34 @@ function getFaceNormals() {
   return raw.map(v => new THREE.Vector3(...v).normalize());
 }
 
-// Procedural Bronze Texture Generator
+// Procedural Bronze Texture Generator (Luminous Warm Antique Bronze)
 function createBronzeTexture() {
   const canvas = document.createElement('canvas');
   canvas.width = 512;
   canvas.height = 512;
   const ctx = canvas.getContext('2d')!;
 
-  // Base aged cast bronze tone
-  ctx.fillStyle = '#6e4f2b';
+  // Base luminous antique golden bronze
+  ctx.fillStyle = '#b57c3d';
   ctx.fillRect(0, 0, 512, 512);
 
-  // Cast bronze mottled grain
+  // Mottled cast bronze grain
   for (let i = 0; i < 4000; i++) {
     const x = Math.random() * 512;
     const y = Math.random() * 512;
     const s = 1 + Math.random() * 3;
-    const dark = Math.random() > 0.5;
-    ctx.fillStyle = dark ? 'rgba(35, 22, 10, 0.25)' : 'rgba(165, 120, 65, 0.2)';
+    const bright = Math.random() > 0.45;
+    ctx.fillStyle = bright ? 'rgba(235, 185, 115, 0.28)' : 'rgba(110, 68, 25, 0.25)';
     ctx.fillRect(x, y, s, s);
   }
 
   // Subtle greenish copper verdigris oxidation specks
-  for (let j = 0; j < 300; j++) {
+  for (let j = 0; j < 250; j++) {
     const x = Math.random() * 512;
     const y = Math.random() * 512;
-    ctx.fillStyle = 'rgba(72, 120, 95, 0.18)';
+    ctx.fillStyle = 'rgba(65, 125, 100, 0.22)';
     ctx.beginPath();
-    ctx.arc(x, y, 2 + Math.random() * 4, 0, Math.PI * 2);
+    ctx.arc(x, y, 2 + Math.random() * 3, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -89,32 +89,35 @@ export function createRomanDodecahedron(radius = 1.0) {
   const bronzeTex = createBronzeTexture();
   const bronzeMat = new THREE.MeshStandardMaterial({
     map: bronzeTex,
-    color: 0x9e7240, // rich antique bronze
-    metalness: 0.82,
-    roughness: 0.36
+    color: 0xdfa052,          // bright, warm antique gold-bronze
+    metalness: 0.42,          // tuned for rich diffuse visibility
+    roughness: 0.30,          // crisp specular glint
+    emissive: 0x44260d,       // subtle internal warmth
+    emissiveIntensity: 0.25
   });
 
-  const interiorMat = new THREE.MeshStandardMaterial({
-    color: 0x24180c, // dark shadowed interior
-    roughness: 0.9,
-    metalness: 0.5,
-    side: THREE.BackSide
+  const knobMat = new THREE.MeshStandardMaterial({
+    map: bronzeTex,
+    color: 0xf5b868,          // polished highlight on knobs
+    metalness: 0.52,
+    roughness: 0.24,
+    emissive: 0x553010,
+    emissiveIntensity: 0.3
   });
 
   const verts = getDodecahedronVertices(radius);
   const faceNormals = getFaceNormals();
 
   // 1. Spherical knobs at all 20 vertices
-  const knobGeo = new THREE.SphereGeometry(radius * 0.11, 16, 16);
+  const knobGeo = new THREE.SphereGeometry(radius * 0.12, 16, 16);
   verts.forEach(v => {
-    const knob = new THREE.Mesh(knobGeo, bronzeMat);
+    const knob = new THREE.Mesh(knobGeo, knobMat);
     knob.position.copy(v);
     knob.castShadow = true;
     group.add(knob);
   });
 
   // Differing hole radii for each of the 12 pentagonal faces
-  // (historically, holes range from ~10mm to ~30mm diameter)
   const holeRatios = [
     0.20, 0.24, 0.28, 0.32,
     0.35, 0.38, 0.40, 0.43,
@@ -178,9 +181,9 @@ export function createRomanDodecahedron(radius = 1.0) {
       if (ringR < pentagonRadius * 0.88) {
         const ringGeo = new THREE.RingGeometry(ringR - radius * 0.008, ringR + radius * 0.008, 32);
         const ringMat = new THREE.MeshStandardMaterial({
-          color: 0x6e4a22,
-          roughness: 0.5,
-          metalness: 0.9
+          color: 0x9e6830,
+          roughness: 0.35,
+          metalness: 0.6
         });
         const ring = new THREE.Mesh(ringGeo, ringMat);
         ring.position.z = radius * 0.005;
