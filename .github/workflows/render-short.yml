@@ -17,19 +17,21 @@ on:
 
 jobs:
   render-chunks:
-    name: Render HD Video Part ${{ matrix.chunk.id }}/6
+    name: Render HD Video Part ${{ matrix.chunk.id }}/8
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix:
         chunk:
-          - { id: "01", frames: "0-354" }
-          - { id: "02", frames: "355-709" }
-          - { id: "03", frames: "710-1064" }
-          - { id: "04", frames: "1065-1419" }
-          - { id: "05", frames: "1420-1774" }
-          - { id: "06", frames: "1775-2129" }
+          - { id: "01", frames: "0-265" }
+          - { id: "02", frames: "266-531" }
+          - { id: "03", frames: "532-797" }
+          - { id: "04", frames: "798-1063" }
+          - { id: "05", frames: "1064-1329" }
+          - { id: "06", frames: "1330-1595" }
+          - { id: "07", frames: "1596-1861" }
+          - { id: "08", frames: "1862-2129" }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,7 +76,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download All 6 Video Chunks
+      - name: Download All 8 Video Chunks
         uses: actions/download-artifact@v4
         with:
           pattern: video-chunk-*
@@ -85,7 +87,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
           mkdir -p out/cloud
-          for i in 01 02 03 04 05 06; do
+          for i in 01 02 03 04 05 06 07 08; do
             echo "file 'chunk_${i}.mp4'" >> out/chunks/list.txt
           done
 
