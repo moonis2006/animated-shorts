@@ -1,0 +1,662 @@
+[
+  {
+    "id": "scene1_hook",
+    "text": "Almost 1,700 years ago, the Romans created something extraordinary. But nobody knows what it was for.",
+    "start": 0.5,
+    "end": 7.83,
+    "startFrame": 15,
+    "endFrame": 234,
+    "words": [
+      {
+        "word": "Almost",
+        "start": 0.5,
+        "end": 0.96
+      },
+      {
+        "word": "1,700",
+        "start": 0.96,
+        "end": 1.42
+      },
+      {
+        "word": "years",
+        "start": 1.42,
+        "end": 1.87
+      },
+      {
+        "word": "ago,",
+        "start": 1.87,
+        "end": 2.33
+      },
+      {
+        "word": "the",
+        "start": 2.33,
+        "end": 2.79
+      },
+      {
+        "word": "Romans",
+        "start": 2.79,
+        "end": 3.25
+      },
+      {
+        "word": "created",
+        "start": 3.25,
+        "end": 3.71
+      },
+      {
+        "word": "something",
+        "start": 3.71,
+        "end": 4.16
+      },
+      {
+        "word": "extraordinary.",
+        "start": 4.16,
+        "end": 4.62
+      },
+      {
+        "word": "But",
+        "start": 4.62,
+        "end": 5.08
+      },
+      {
+        "word": "nobody",
+        "start": 5.08,
+        "end": 5.54
+      },
+      {
+        "word": "knows",
+        "start": 5.54,
+        "end": 6.0
+      },
+      {
+        "word": "what",
+        "start": 6.0,
+        "end": 6.45
+      },
+      {
+        "word": "it",
+        "start": 6.45,
+        "end": 6.91
+      },
+      {
+        "word": "was",
+        "start": 6.91,
+        "end": 7.37
+      },
+      {
+        "word": "for.",
+        "start": 7.37,
+        "end": 7.83
+      }
+    ]
+  },
+  {
+    "id": "scene2_rome",
+    "text": "Across the Roman Empire, craftsmen were making strange objects unlike anything else.",
+    "start": 7.5,
+    "end": 12.94,
+    "startFrame": 225,
+    "endFrame": 388,
+    "words": [
+      {
+        "word": "Across",
+        "start": 7.5,
+        "end": 7.95
+      },
+      {
+        "word": "the",
+        "start": 7.95,
+        "end": 8.41
+      },
+      {
+        "word": "Roman",
+        "start": 8.41,
+        "end": 8.86
+      },
+      {
+        "word": "Empire,",
+        "start": 8.86,
+        "end": 9.31
+      },
+      {
+        "word": "craftsmen",
+        "start": 9.31,
+        "end": 9.77
+      },
+      {
+        "word": "were",
+        "start": 9.77,
+        "end": 10.22
+      },
+      {
+        "word": "making",
+        "start": 10.22,
+        "end": 10.67
+      },
+      {
+        "word": "strange",
+        "start": 10.67,
+        "end": 11.12
+      },
+      {
+        "word": "objects",
+        "start": 11.12,
+        "end": 11.58
+      },
+      {
+        "word": "unlike",
+        "start": 11.58,
+        "end": 12.03
+      },
+      {
+        "word": "anything",
+        "start": 12.03,
+        "end": 12.48
+      },
+      {
+        "word": "else.",
+        "start": 12.48,
+        "end": 12.94
+      }
+    ]
+  },
+  {
+    "id": "scene3_craftsman",
+    "text": "Each one had twelve sides, holes of different sizes, and tiny knobs at every corner.",
+    "start": 15.5,
+    "end": 20.66,
+    "startFrame": 465,
+    "endFrame": 619,
+    "words": [
+      {
+        "word": "Each",
+        "start": 15.5,
+        "end": 15.84
+      },
+      {
+        "word": "one",
+        "start": 15.84,
+        "end": 16.19
+      },
+      {
+        "word": "had",
+        "start": 16.19,
+        "end": 16.53
+      },
+      {
+        "word": "twelve",
+        "start": 16.53,
+        "end": 16.88
+      },
+      {
+        "word": "sides,",
+        "start": 16.88,
+        "end": 17.22
+      },
+      {
+        "word": "holes",
+        "start": 17.22,
+        "end": 17.56
+      },
+      {
+        "word": "of",
+        "start": 17.56,
+        "end": 17.91
+      },
+      {
+        "word": "different",
+        "start": 17.91,
+        "end": 18.25
+      },
+      {
+        "word": "sizes,",
+        "start": 18.25,
+        "end": 18.6
+      },
+      {
+        "word": "and",
+        "start": 18.6,
+        "end": 18.94
+      },
+      {
+        "word": "tiny",
+        "start": 18.94,
+        "end": 19.28
+      },
+      {
+        "word": "knobs",
+        "start": 19.28,
+        "end": 19.63
+      },
+      {
+        "word": "at",
+        "start": 19.63,
+        "end": 19.97
+      },
+      {
+        "word": "every",
+        "start": 19.97,
+        "end": 20.32
+      },
+      {
+        "word": "corner.",
+        "start": 20.32,
+        "end": 20.66
+      }
+    ]
+  },
+  {
+    "id": "scene4_spread",
+    "text": "More than a hundred have been discovered across former Roman territories. Yet no Roman document explains their purpose.",
+    "start": 24.5,
+    "end": 31.19,
+    "startFrame": 735,
+    "endFrame": 935,
+    "words": [
+      {
+        "word": "More",
+        "start": 24.5,
+        "end": 24.87
+      },
+      {
+        "word": "than",
+        "start": 24.87,
+        "end": 25.24
+      },
+      {
+        "word": "a",
+        "start": 25.24,
+        "end": 25.62
+      },
+      {
+        "word": "hundred",
+        "start": 25.62,
+        "end": 25.99
+      },
+      {
+        "word": "have",
+        "start": 25.99,
+        "end": 26.36
+      },
+      {
+        "word": "been",
+        "start": 26.36,
+        "end": 26.73
+      },
+      {
+        "word": "discovered",
+        "start": 26.73,
+        "end": 27.1
+      },
+      {
+        "word": "across",
+        "start": 27.1,
+        "end": 27.47
+      },
+      {
+        "word": "former",
+        "start": 27.47,
+        "end": 27.85
+      },
+      {
+        "word": "Roman",
+        "start": 27.85,
+        "end": 28.22
+      },
+      {
+        "word": "territories.",
+        "start": 28.22,
+        "end": 28.59
+      },
+      {
+        "word": "Yet",
+        "start": 28.59,
+        "end": 28.96
+      },
+      {
+        "word": "no",
+        "start": 28.96,
+        "end": 29.33
+      },
+      {
+        "word": "Roman",
+        "start": 29.33,
+        "end": 29.7
+      },
+      {
+        "word": "document",
+        "start": 29.7,
+        "end": 30.08
+      },
+      {
+        "word": "explains",
+        "start": 30.08,
+        "end": 30.45
+      },
+      {
+        "word": "their",
+        "start": 30.45,
+        "end": 30.82
+      },
+      {
+        "word": "purpose.",
+        "start": 30.82,
+        "end": 31.19
+      }
+    ]
+  },
+  {
+    "id": "scene5_theories",
+    "text": "Was it a candle holder? A measuring instrument? A ritual object? Or perhaps something used to make gloves? Nobody knows for certain.",
+    "start": 34.5,
+    "end": 42.22,
+    "startFrame": 1035,
+    "endFrame": 1266,
+    "words": [
+      {
+        "word": "Was",
+        "start": 34.5,
+        "end": 34.85
+      },
+      {
+        "word": "it",
+        "start": 34.85,
+        "end": 35.2
+      },
+      {
+        "word": "a",
+        "start": 35.2,
+        "end": 35.55
+      },
+      {
+        "word": "candle",
+        "start": 35.55,
+        "end": 35.9
+      },
+      {
+        "word": "holder?",
+        "start": 35.9,
+        "end": 36.26
+      },
+      {
+        "word": "A",
+        "start": 36.26,
+        "end": 36.61
+      },
+      {
+        "word": "measuring",
+        "start": 36.61,
+        "end": 36.96
+      },
+      {
+        "word": "instrument?",
+        "start": 36.96,
+        "end": 37.31
+      },
+      {
+        "word": "A",
+        "start": 37.31,
+        "end": 37.66
+      },
+      {
+        "word": "ritual",
+        "start": 37.66,
+        "end": 38.01
+      },
+      {
+        "word": "object?",
+        "start": 38.01,
+        "end": 38.36
+      },
+      {
+        "word": "Or",
+        "start": 38.36,
+        "end": 38.71
+      },
+      {
+        "word": "perhaps",
+        "start": 38.71,
+        "end": 39.06
+      },
+      {
+        "word": "something",
+        "start": 39.06,
+        "end": 39.41
+      },
+      {
+        "word": "used",
+        "start": 39.41,
+        "end": 39.77
+      },
+      {
+        "word": "to",
+        "start": 39.77,
+        "end": 40.12
+      },
+      {
+        "word": "make",
+        "start": 40.12,
+        "end": 40.47
+      },
+      {
+        "word": "gloves?",
+        "start": 40.47,
+        "end": 40.82
+      },
+      {
+        "word": "Nobody",
+        "start": 40.82,
+        "end": 41.17
+      },
+      {
+        "word": "knows",
+        "start": 41.17,
+        "end": 41.52
+      },
+      {
+        "word": "for",
+        "start": 41.52,
+        "end": 41.87
+      },
+      {
+        "word": "certain.",
+        "start": 41.87,
+        "end": 42.22
+      }
+    ]
+  },
+  {
+    "id": "scene6_modern",
+    "text": "In 2023, archaeologists discovered another remarkably preserved example in Norton Disney, England.",
+    "start": 50.5,
+    "end": 57.34,
+    "startFrame": 1515,
+    "endFrame": 1720,
+    "words": [
+      {
+        "word": "In",
+        "start": 50.5,
+        "end": 51.07
+      },
+      {
+        "word": "2023,",
+        "start": 51.07,
+        "end": 51.64
+      },
+      {
+        "word": "archaeologists",
+        "start": 51.64,
+        "end": 52.21
+      },
+      {
+        "word": "discovered",
+        "start": 52.21,
+        "end": 52.78
+      },
+      {
+        "word": "another",
+        "start": 52.78,
+        "end": 53.35
+      },
+      {
+        "word": "remarkably",
+        "start": 53.35,
+        "end": 53.92
+      },
+      {
+        "word": "preserved",
+        "start": 53.92,
+        "end": 54.49
+      },
+      {
+        "word": "example",
+        "start": 54.49,
+        "end": 55.06
+      },
+      {
+        "word": "in",
+        "start": 55.06,
+        "end": 55.63
+      },
+      {
+        "word": "Norton",
+        "start": 55.63,
+        "end": 56.2
+      },
+      {
+        "word": "Disney,",
+        "start": 56.2,
+        "end": 56.77
+      },
+      {
+        "word": "England.",
+        "start": 56.77,
+        "end": 57.34
+      }
+    ]
+  },
+  {
+    "id": "scene7_ending",
+    "text": "After nearly seventeen centuries, the Roman dodecahedron remains one of archaeology's strangest unanswered mysteries. What do you think it was actually used for?",
+    "start": 61.2,
+    "end": 70.99,
+    "startFrame": 1836,
+    "endFrame": 2129,
+    "words": [
+      {
+        "word": "After",
+        "start": 61.2,
+        "end": 61.63
+      },
+      {
+        "word": "nearly",
+        "start": 61.63,
+        "end": 62.05
+      },
+      {
+        "word": "seventeen",
+        "start": 62.05,
+        "end": 62.48
+      },
+      {
+        "word": "centuries,",
+        "start": 62.48,
+        "end": 62.9
+      },
+      {
+        "word": "the",
+        "start": 62.9,
+        "end": 63.33
+      },
+      {
+        "word": "Roman",
+        "start": 63.33,
+        "end": 63.75
+      },
+      {
+        "word": "dodecahedron",
+        "start": 63.75,
+        "end": 64.18
+      },
+      {
+        "word": "remains",
+        "start": 64.18,
+        "end": 64.61
+      },
+      {
+        "word": "one",
+        "start": 64.61,
+        "end": 65.03
+      },
+      {
+        "word": "of",
+        "start": 65.03,
+        "end": 65.46
+      },
+      {
+        "word": "archaeology's",
+        "start": 65.46,
+        "end": 65.88
+      },
+      {
+        "word": "strangest",
+        "start": 65.88,
+        "end": 66.31
+      },
+      {
+        "word": "unanswered",
+        "start": 66.31,
+        "end": 66.73
+      },
+      {
+        "word": "mysteries.",
+        "start": 66.73,
+        "end": 67.16
+      },
+      {
+        "word": "What",
+        "start": 67.16,
+        "end": 67.59
+      },
+      {
+        "word": "do",
+        "start": 67.59,
+        "end": 68.01
+      },
+      {
+        "word": "you",
+        "start": 68.01,
+        "end": 68.44
+      },
+      {
+        "word": "think",
+        "start": 68.44,
+        "end": 68.86
+      },
+      {
+        "word": "it",
+        "start": 68.86,
+        "end": 69.29
+      },
+      {
+        "word": "was",
+        "start": 69.29,
+        "end": 69.71
+      },
+      {
+        "word": "actually",
+        "start": 69.71,
+        "end": 70.14
+      },
+      {
+        "word": "used",
+        "start": 70.14,
+        "end": 70.56
+      },
+      {
+        "word": "for?",
+        "start": 70.56,
+        "end": 70.99
+      }
+    ]
+  }
+]

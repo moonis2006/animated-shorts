@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       composition:
-        description: "Composition ID (CheeseShort or BridgeShort)"
+        description: "Composition ID (DodecahedronShort, CheeseShort, BridgeShort)"
         required: true
-        default: "CheeseShort"
+        default: "DodecahedronShort"
       scale:
         description: "Resolution scale (1.0 = 1080p Full HD)"
         required: true
@@ -19,15 +19,15 @@ jobs:
   render-chunks:
     name: Render HD Video Part ${{ matrix.chunk.id }}/4
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
         chunk:
-          - { id: "01", frames: "0-489" }
-          - { id: "02", frames: "490-979" }
-          - { id: "03", frames: "980-1469" }
-          - { id: "04", frames: "1470-1959" }
+          - { id: "01", frames: "0-529" }
+          - { id: "02", frames: "530-1059" }
+          - { id: "03", frames: "1060-1589" }
+          - { id: "04", frames: "1590-2129" }
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,13 +48,13 @@ jobs:
 
       - name: Render Chunk ${{ matrix.chunk.id }}
         run: |
-          COMP="${{ github.event.inputs.composition || 'CheeseShort' }}"
+          COMP="${{ github.event.inputs.composition || 'DodecahedronShort' }}"
           SCALE="${{ github.event.inputs.scale || '1.0' }}"
           mkdir -p out/chunks
           npx remotion render src/index.ts "$COMP" "out/chunks/chunk_${{ matrix.chunk.id }}.mp4" \
             --frames="${{ matrix.chunk.frames }}" \
             --codec=h264 --crf=18 --scale="$SCALE" \
-            --concurrency=4 --timeout=120000 --muted
+            --concurrency=4 --timeout=180000 --muted
 
       - name: Upload Chunk ${{ matrix.chunk.id }}
         uses: actions/upload-artifact@v4
@@ -86,13 +86,26 @@ jobs:
           for i in 01 02 03 04; do
             echo "file 'chunk_${i}.mp4'" >> out/chunks/list.txt
           done
-          ffmpeg -y -f concat -safe 0 -i out/chunks/list.txt -i public/cheese/mix.mp3 \
+
+          COMP="${{ github.event.inputs.composition || 'DodecahedronShort' }}"
+          if [ "$COMP" = "DodecahedronShort" ]; then
+            AUDIO_FILE="public/dodecahedron/mix.mp3"
+            OUTPUT_NAME="the_1700_year_old_roman_dodecahedron.mp4"
+          elif [ "$COMP" = "CheeseShort" ]; then
+            AUDIO_FILE="public/cheese/mix.mp3"
+            OUTPUT_NAME="tactical_fiction_cheese_short.mp4"
+          else
+            AUDIO_FILE="public/dodecahedron/mix.mp3"
+            OUTPUT_NAME="final_rendered_short.mp4"
+          fi
+
+          ffmpeg -y -f concat -safe 0 -i out/chunks/list.txt -i "$AUDIO_FILE" \
             -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 192k -shortest \
-            out/cloud/tactical_fiction_cheese_short.mp4
+            "out/cloud/$OUTPUT_NAME"
 
       - name: Upload Final Full Video MP4
         uses: actions/upload-artifact@v4
         with:
-          name: rendered-short-output
-          path: out/cloud/tactical_fiction_cheese_short.mp4
+          name: roman-dodecahedron-final-video
+          path: out/cloud/*.mp4
           retention-days: 14

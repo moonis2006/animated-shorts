@@ -1,7 +1,7 @@
 param(
-  [string]$Composition = "BridgeShort",
-  [string]$Mode = "clip_5s",
-  [string]$Scale = "0.6667"
+  [string]$Composition = "DodecahedronShort",
+  [string]$Mode = "full_70s",
+  [string]$Scale = "1.0"
 )
 
 Set-Location "C:\Users\WizTech\.gemini\antigravity\scratch\animated-shorts"
@@ -14,8 +14,8 @@ if ($remoteUrl -match "x-access-token:([^@]+)@") {
 }
 
 git add -A
-git commit -m "Update animation for cloud render ($Composition - $Mode)" 2>$null
+git commit -m "Build 70s Roman Dodecahedron animation ($Composition - $Mode)" 2>$null
 git push origin main
 git push origin main:render --force
 
-Write-Output "Triggered cloud render on GitHub! Check status at: https://github.com/moonis2006/animated-shorts/actions"
+Write-Output "Triggered cloud render on GitHub! Check live progress at: https://github.com/moonis2006/animated-shorts/actions"
